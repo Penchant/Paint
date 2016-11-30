@@ -35,7 +35,19 @@ public class DrawFrame extends JComponent {
             public void mousePressed(MouseEvent e) {
                 oldX = e.getX();
                 oldY = e.getY();
-
+                if( action.equals("Add Text")){
+                    Icon icon = null;
+                    Object[] possibilities = null;
+                            String text = (String)JOptionPane.showInputDialog(
+                                    SwingPaint.frame,
+                                    "What is the text you would like to add?",
+                                    "Add Text", 1,
+                                    icon, possibilities, "text");
+                            g2.setColor(col);
+                            g2.setFont(new Font("Arial Black", Font.PLAIN, 20));
+                            g2.drawString(text, oldX, oldY);
+                            repaint();
+                }
             }
         });
 

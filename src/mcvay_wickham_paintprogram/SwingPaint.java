@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import static java.awt.Color.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -24,8 +25,9 @@ import javax.imageio.ImageIO;
 public class SwingPaint {
 
     JButton clearBtn, blackBtn, blueBtn, redBtn, greenBtn, yellowBtn, whiteBtn,
-            fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn;
+            fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn, addTextBtn;
     Dimension buttonSpace = new Dimension(0, 10);
+    static JFrame frame;
     ActionListener actionListener = new ActionListener() {
 
         @Override
@@ -50,6 +52,9 @@ public class SwingPaint {
             }
             else if (e.getSource() == pencilBtn){
                 DrawFrame.getInstance().setAction("Pencil");
+            }
+            else if (e.getSource() ==  addTextBtn){
+                DrawFrame.getInstance().setAction("Add Text");
             }
             else if (e.getSource() == blackBtn) {
                 DrawFrame.getInstance().setColor(black);
@@ -76,7 +81,77 @@ public class SwingPaint {
      * Everything involving the initial display of the program
      */
     public void show() {
-        JFrame frame = new JFrame("Paint");
+        frame = new JFrame("Paint");
+        JMenuBar bar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        JMenu edit = new JMenu("Edit");
+        JMenu functions = getFunctions();
+        JMenu about = new JMenu("About");
+        JMenuItem openItem, exitItem, resetItem;
+        frame.addWindowListener(new WindowAdapter(){
+            @Override
+              public void windowClosing(WindowEvent ev){quit();}
+            });
+      openItem = new JMenuItem("Open");
+      openItem.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){ 
+              //handleOpen();
+          }
+           });
+      resetItem = new JMenuItem("Edit");
+      resetItem.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){ 
+          //    reset();
+          }
+           });     
+      exitItem = new JMenuItem("Exit");
+      exitItem.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){ quit(); }
+           });
+      file.add(openItem);
+      file.add(resetItem);
+      file.add(exitItem);
+      
+      JMenuItem SOL = new JMenuItem("SOL, nothing here!");
+      edit.add(SOL);
+      
+      JMenuItem help = new JMenuItem("Help");
+      help.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){ 
+              String clearH = "Clear: clear the page \n\nClick and drag to create shapes. \n";
+              String fillRectH = "Filled Rectangle: set drawing action to a filled rectangle. \n";
+              String fillOvalH = "Filled Oval: sets drawing action to a filled oval.\n";
+              String rectH = "Rectangle Outline: sets drawing action to a rectangle outline.\n";
+              String ovalH = "Oval Outline: sets drawing action to a oval outline. \n";
+              String lineDrawingH = "Line Drawing: sets drawing action a line.\n";
+              String pencilH = "Pencil: sets drawing action to draw wherever the mouse is dragged.\n";
+              
+              JOptionPane.showMessageDialog(frame,  clearH + fillRectH + fillOvalH + rectH +ovalH + lineDrawingH + pencilH, "Help", 1);
+              
+              
+              /*JFrame helpFrame = new JFrame("Help");
+              Container content = helpFrame.getContentPane();
+              content.setLayout(new BorderLayout());
+
+              //content.add(DrawFrame.getInstance(), BorderLayout.CENTER);
+               helpFrame.setSize(1000, 1000);
+
+               helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+               helpFrame.setVisible(true);*/
+          }
+           });
+      about.add(help);
+      
+        bar.add(file);
+        bar.add(edit);
+        bar.add(functions);
+        bar.add(about);
+        
+        frame.setJMenuBar(bar);
         Container content = frame.getContentPane();
         content.setLayout(new BorderLayout());
 
@@ -134,7 +209,10 @@ public class SwingPaint {
         
         pencilBtn = new JButton("Pencil");
         pencilBtn.addActionListener(actionListener);
-
+        
+        addTextBtn = new JButton("Add Text");
+        addTextBtn.addActionListener(actionListener);
+        
         controls.add(clearBtn);
         controls.add(Box.createRigidArea(buttonSpace));
         controls.add(fillRectBtn);
@@ -148,7 +226,9 @@ public class SwingPaint {
         controls.add(lineDrawingBtn);
         controls.add(Box.createRigidArea(buttonSpace));
         controls.add(pencilBtn);
-
+        controls.add(Box.createRigidArea(buttonSpace));
+        controls.add(addTextBtn);
+        
         colors.add(blackBtn);
         colors.add(Box.createRigidArea(buttonSpace));
         colors.add(blueBtn);
@@ -173,5 +253,65 @@ public class SwingPaint {
         frame.setVisible(true);
 
     }
+      private JMenu getFunctions()
+  {
+     JMenu fun = new JMenu("Choices");
+     JMenuItem fillRect = new JMenuItem("Filled Rectangle");
+     JMenuItem fillOval = new JMenuItem("Filled Oval");
+     JMenuItem oval = new JMenuItem("Oval Outline");
+     JMenuItem rectangle = new JMenuItem("Rectangle Outline");
+     JMenuItem lineDrawing = new JMenuItem("Line Drawing");
+     JMenuItem pencil = new JMenuItem("Pencil");
+     fillRect.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Fill Rectangle");
+          }
+           });
+     fillOval.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Fill Oval");
+          }
+           });
+     oval.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Oval");
+          }
+           });
+     rectangle.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Rectangle");
+          }
+           });
+     lineDrawing.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Line Drawing");
+          }
+           });
+     pencil.addActionListener(new ActionListener(){
+            @Override
+          public void actionPerformed(ActionEvent evt){
+              DrawFrame.getInstance().setAction("Pencil");
+          }
+           });
+      fun.add(fillRect);
+      fun.add(fillOval);
+      fun.add(rectangle);
+      fun.add(oval);
+      fun.add(lineDrawing);
+      fun.add(pencil);
+      
+      return fun;   
+
+  }
+    
+     private void quit()
+  {  
+     System.exit(0);
+  }
 
 }
