@@ -26,6 +26,9 @@ public class DrawFrame extends JComponent {
     private static DrawFrame instance;
     public static String action = "";
     public Color col = black;
+    public int stroke;
+    Stroke strokeSize = new BasicStroke(stroke);
+    
 
     public DrawFrame() {
       
@@ -35,8 +38,9 @@ public class DrawFrame extends JComponent {
             public void mousePressed(MouseEvent e) {
                 oldX = e.getX();
                 oldY = e.getY();
+                g2.setStroke( new BasicStroke(stroke));
                 if( action.equals("Add Text")){
-                    Icon icon = null;
+                    Icon icon = new ImageIcon(getClass().getClassLoader().getResource("#SuperProfessional.gif")); 
                     Object[] possibilities = null;
                             String text = (String)JOptionPane.showInputDialog(
                                     SwingPaint.frame,
@@ -54,6 +58,7 @@ public class DrawFrame extends JComponent {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                
 
                 currentX = e.getX();
                 currentY = e.getY();
@@ -62,7 +67,9 @@ public class DrawFrame extends JComponent {
                     g2.setColor(col);
                    
                     if(action.equals("Pencil")){
+                       
                        g2.drawLine(oldX, oldY, currentX, currentY);
+                       
                        oldX = currentX;
                        oldY = currentY;
                    }
@@ -187,5 +194,10 @@ public class DrawFrame extends JComponent {
      */
     public void setColor(Color color){
         col = color;
+    }
+    
+    public void setStroke(int str)
+    {
+        stroke = str;
     }
 }

@@ -1,4 +1,3 @@
-
 package mcvay_wickham_paintprogram;
 
 import java.awt.Container;
@@ -11,21 +10,17 @@ import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
- * Daniel McVay 
- * Dylan Wickham
- * November 10th, 2016
- * CSCI 132
- * Hunter Lloyd
- * 
+ * Daniel McVay Dylan Wickham November 10th, 2016 CSCI 132 Hunter Lloyd
+ *
  * Contains instance of frame, all buttons, etc.
  */
+public class SwingPaint implements ChangeListener{
 
-public class SwingPaint {
-
-    JButton clearBtn, blackBtn, blueBtn, redBtn, greenBtn, yellowBtn, whiteBtn,
-            fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn, addTextBtn;
+    JButton clearBtn, fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn, colorBtn, addTextBtn;
     Dimension buttonSpace = new Dimension(0, 10);
     static JFrame frame;
     ActionListener actionListener = new ActionListener() {
@@ -34,49 +29,37 @@ public class SwingPaint {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearBtn) {
                 DrawFrame.getInstance().clear();
-            } 
-            else if (e.getSource() == fillRectBtn) {
+            } else if (e.getSource() == fillRectBtn) {
                 DrawFrame.getInstance().setAction("Fill Rectangle");
-            }
-            else if (e.getSource() == fillOvalBtn) {
+            } else if (e.getSource() == fillOvalBtn) {
                 DrawFrame.getInstance().setAction("Fill Oval");
-            }
-            else if (e.getSource() == ovalBtn) {
+            } else if (e.getSource() == ovalBtn) {
                 DrawFrame.getInstance().setAction("Oval");
-            }
-            else if (e.getSource() == rectBtn) {
+            } else if (e.getSource() == rectBtn) {
                 DrawFrame.getInstance().setAction("Rectangle");
-            }
-            else if (e.getSource() == lineDrawingBtn) {
+            } else if (e.getSource() == lineDrawingBtn) {
                 DrawFrame.getInstance().setAction("Line Drawing");
-            }
-            else if (e.getSource() == pencilBtn){
+            } else if (e.getSource() == pencilBtn) {
                 DrawFrame.getInstance().setAction("Pencil");
+            } else if (e.getSource() == colorBtn) {
+                DrawFrame.getInstance().setColor(JColorChooser.showDialog(DrawFrame.getInstance(), "Select a Color", black));
             }
             else if (e.getSource() ==  addTextBtn){
                 DrawFrame.getInstance().setAction("Add Text");
             }
-            else if (e.getSource() == blackBtn) {
-                DrawFrame.getInstance().setColor(black);
-            }
-            else if (e.getSource() == blueBtn) {
-                DrawFrame.getInstance().setColor(blue);
-            }
-            else if (e.getSource() == redBtn) {
-                DrawFrame.getInstance().setColor(red);
-            }
-            else if (e.getSource() == greenBtn) {
-                DrawFrame.getInstance().setColor(green);
-            }
-            else if (e.getSource() == yellowBtn) {
-               DrawFrame.getInstance().setColor(yellow);
-            }
-            else if (e.getSource() == whiteBtn) {
-               DrawFrame.getInstance().setColor(white);
-            } 
         }
     };
-    
+   
+    @Override
+    public void stateChanged(ChangeEvent e)
+    {
+        JSlider source = (JSlider)e.getSource();
+        if(!source.getValueIsAdjusting())
+        {
+            DrawFrame.getInstance().setStroke((int)source.getValue());
+        }
+    }
+
     /**
      * Everything involving the initial display of the program
      */
@@ -130,7 +113,9 @@ public class SwingPaint {
               String lineDrawingH = "Line Drawing: sets drawing action a line.\n";
               String pencilH = "Pencil: sets drawing action to draw wherever the mouse is dragged.\n";
               
-              JOptionPane.showMessageDialog(frame,  clearH + fillRectH + fillOvalH + rectH +ovalH + lineDrawingH + pencilH, "Help", 1);
+              
+              Icon icon = new ImageIcon(getClass().getClassLoader().getResource("#SuperProfessional.gif"));
+              JOptionPane.showMessageDialog(frame,  clearH + fillRectH + fillOvalH + rectH +ovalH + lineDrawingH + pencilH, "Help", JOptionPane.INFORMATION_MESSAGE, icon);
               
               
               /*JFrame helpFrame = new JFrame("Help");
@@ -158,60 +143,52 @@ public class SwingPaint {
         content.add(DrawFrame.getInstance(), BorderLayout.CENTER);
         JPanel controls = new JPanel();
         JPanel colors = new JPanel();
+        JPanel funStuff = new JPanel();
 
-        blackBtn = new JButton();
-        blackBtn.addActionListener(actionListener);
-        blackBtn.setBackground(Color.black);
+        colorBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("color-wheel.gif")));
+        colorBtn.addActionListener(actionListener);
+        colorBtn.setContentAreaFilled(false);
+        colorBtn.setBorderPainted(false);
 
-        blueBtn = new JButton();
-        blueBtn.addActionListener(actionListener);
-        blueBtn.setBackground(Color.blue);
-
-        redBtn = new JButton();
-        redBtn.addActionListener(actionListener);
-        redBtn.setBackground(Color.red);
-
-        greenBtn = new JButton();
-        greenBtn.addActionListener(actionListener);
-        greenBtn.setBackground(Color.green);
-
-        yellowBtn = new JButton();
-        yellowBtn.addActionListener(actionListener);
-        yellowBtn.setBackground(Color.yellow);
-
-        whiteBtn = new JButton();
-        whiteBtn.addActionListener(actionListener);
-        whiteBtn.setBackground(Color.white);
-
-        Icon clearIcon = new ImageIcon("Clear.PNG");
-        clearBtn = new JButton("Clear");
+        clearBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Clear1.gif")));
         clearBtn.addActionListener(actionListener);
+        clearBtn.setContentAreaFilled(false);
+        clearBtn.setBorderPainted(false);
 
-        Icon fillRectIcon = new ImageIcon("FilledRect.PNG");
-        fillRectBtn = new JButton("Filled Rectangle");
+        fillRectBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("FilledRect.gif")));
         fillRectBtn.addActionListener(actionListener);
+        fillRectBtn.setContentAreaFilled(false);
+        fillRectBtn.setBorderPainted(false);
 
-        Icon fillOvalIcon = new ImageIcon("FilledOval.PNG");
-        fillOvalBtn = new JButton("Fill Oval");
+        fillOvalBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("FilledOval.gif")));
         fillOvalBtn.addActionListener(actionListener);
+        fillOvalBtn.setContentAreaFilled(false);
+        fillOvalBtn.setBorderPainted(false);
 
-        Icon emptyRectIcon = new ImageIcon("OpenRect.PNG");
-        rectBtn = new JButton("Empty Rectangle");
+        rectBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("OpenRect.gif")));
         rectBtn.addActionListener(actionListener);
+        rectBtn.setContentAreaFilled(false);
+        rectBtn.setBorderPainted(false);
 
-        Icon emptyOvalIcon = new ImageIcon("OpenOval.PNG");
-        ovalBtn = new JButton("Empty Oval");
+        ovalBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("OpenOval.gif")));
         ovalBtn.addActionListener(actionListener);
+        ovalBtn.setContentAreaFilled(false);
+        ovalBtn.setBorderPainted(false);
 
-        Icon lineDrawIcon = new ImageIcon("LineDraw.PNG");
-        lineDrawingBtn = new JButton("Line Drawing");
+        lineDrawingBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("blackLine.gif")));
         lineDrawingBtn.addActionListener(actionListener);
-        
-        pencilBtn = new JButton("Pencil");
+        lineDrawingBtn.setContentAreaFilled(false);
+        lineDrawingBtn.setBorderPainted(false);
+
+        pencilBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("LineDraw.gif")));
         pencilBtn.addActionListener(actionListener);
+        pencilBtn.setContentAreaFilled(false);
+        pencilBtn.setBorderPainted(false);
         
-        addTextBtn = new JButton("Add Text");
+        addTextBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("TextBox.gif")));
         addTextBtn.addActionListener(actionListener);
+        addTextBtn.setContentAreaFilled(false);
+        addTextBtn.setBorderPainted(false);
         
         controls.add(clearBtn);
         controls.add(Box.createRigidArea(buttonSpace));
@@ -228,24 +205,35 @@ public class SwingPaint {
         controls.add(pencilBtn);
         controls.add(Box.createRigidArea(buttonSpace));
         controls.add(addTextBtn);
+       
+        colors.add(colorBtn);
         
-        colors.add(blackBtn);
-        colors.add(Box.createRigidArea(buttonSpace));
-        colors.add(blueBtn);
-        colors.add(Box.createRigidArea(buttonSpace));
-        colors.add(redBtn);
-        colors.add(Box.createRigidArea(buttonSpace));
-        colors.add(greenBtn);
-        colors.add(Box.createRigidArea(buttonSpace));
-        colors.add(yellowBtn);
-        colors.add(Box.createRigidArea(buttonSpace));
-        colors.add(whiteBtn);
+        JLabel sliderLabel = new JLabel("Stroke Size", JLabel.CENTER);
+        sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0 , 30 , 1);
+       
+        slider.addChangeListener(this);
+        
+        
+        slider.setMinorTickSpacing(2);
+        slider.setMajorTickSpacing(10);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        
+        slider.setLabelTable(slider.createStandardLabels(5));
+        
+        funStuff.add(slider);
+        funStuff.add(sliderLabel);
+        
+        
 
         controls.setLayout(new BoxLayout(controls, BoxLayout.PAGE_AXIS));
         colors.setLayout(new BoxLayout(colors, BoxLayout.Y_AXIS));
 
         content.add(controls, BorderLayout.WEST);
         content.add(colors, BorderLayout.EAST);
+        content.add(funStuff, BorderLayout.SOUTH);
+        
 
         frame.setSize(1000, 1000);
 
