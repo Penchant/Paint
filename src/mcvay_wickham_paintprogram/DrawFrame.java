@@ -24,8 +24,8 @@ public class DrawFrame extends JComponent {
     private Graphics2D g2;
     private int currentX, currentY, oldX, oldY;
     private static DrawFrame instance;
-    public static String action = "";
-    public Color col = black;
+    String action = "";
+    public Color col = black, colOutline;
     public int stroke;
     Stroke strokeSize = new BasicStroke(stroke);
     
@@ -92,57 +92,11 @@ public class DrawFrame extends JComponent {
                     
                     g2.setColor(col);
                     
-                    //Determining width and height of object to be drawn
-                    int w = Math.abs(currentX - oldX);
-                    int h = Math.abs(currentY - oldY);
                     
-                    int startX, startY;
+                    drawShape(action,0);
                     
-                    //Determine starting coordinates for drawing
-                    if (currentX > oldX && currentY > oldY) {
-                        startX = oldX;
-                        startY = oldY;
-                    }
-                     else if (currentX > oldX && currentY < oldY) {
-                        startX = oldX;
-                        startY = currentY;
-                     }
-                     else if (currentX < oldX && currentY > oldY) {
-                        startX = currentX;
-                        startY = oldY;
-                     }       
-                     else {
-                        startX = currentX;
-                        startY = currentY;
-                     }
                     
-                    //Executes whatever action fits, unless the action is pencil being done when the mouse is dragged
-                    switch(action){
-                        case "Line Drawing":
-                            
-                            g2.drawLine(oldX, oldY, currentX, currentY);
-                            break;
-                            
-                        case "Fill Rectangle":
-                            
-                                g2.fillRect(oldX, oldY, w, h);
-                            break;
-                            
-                        case "Fill Oval":
-                            
-                                g2.fillOval(startX, startY, w, h);
-                            
-                            break;
-                            
-                        case "Oval": 
-                        
-                                g2.drawOval(startX, startY, w, h);
-                            break;
-                        case "Rectangle":
-                              
-                                g2.drawRect(startX, startY, w, h);
-                            break;
-                    }
+                    g2.setColor(col);
                     repaint();
                 }
             }
@@ -171,6 +125,63 @@ public class DrawFrame extends JComponent {
         }
         return instance;
     }
+    private void drawShape(String actionD, int mode){
+        //Determining width and height of object to be drawn
+                    int w = Math.abs(currentX - oldX);
+                    int h = Math.abs(currentY - oldY);
+                    
+                    int startX, startY;
+                    
+                    //Determine starting coordinates for drawing
+                    if (currentX > oldX && currentY > oldY) {
+                        startX = oldX;
+                        startY = oldY;
+                    }
+                     else if (currentX > oldX && currentY < oldY) {
+                        startX = oldX;
+                        startY = currentY;
+                     }
+                     else if (currentX < oldX && currentY > oldY) {
+                        startX = currentX;
+                        startY = oldY;
+                     }       
+                     else {
+                        startX = currentX;
+                        startY = currentY;
+                     }
+    //Executes whatever action fits, unless the action is pencil being done when the mouse is dragged
+                    switch(actionD){
+                        case "Line Drawing":
+                            
+                            g2.drawLine(oldX, oldY, currentX, currentY);
+                            break;
+                            
+                        case "Fill Rectangle":
+                            
+                                g2.fillRect(startX, startY, w, h);
+                                g2.setColor(colOutline);
+                                g2.drawRect(startX, startY, w, h);
+                                
+                            break;
+                            
+                        case "Fill Oval":
+                            
+                                g2.fillOval(startX, startY, w, h);
+                                g2.setColor(colOutline);
+                                g2.drawOval(startX, startY, w, h);
+                            
+                            break;
+                            
+                        case "Oval": 
+                                g2.setColor(colOutline);
+                                g2.drawOval(startX, startY, w, h);
+                            break;
+                        case "Rectangle":
+                                g2.setColor(colOutline);
+                                g2.drawRect(startX, startY, w, h);
+                            break;
+                    }
+    }
     /**
      * 
      * Immediately clears canvas
@@ -195,7 +206,9 @@ public class DrawFrame extends JComponent {
     public void setColor(Color color){
         col = color;
     }
-    
+    public void setColorOutline(Color color){
+        colOutline = color;
+    }
     public void setStroke(int str)
     {
         stroke = str;

@@ -20,9 +20,10 @@ import javax.swing.event.ChangeListener;
  */
 public class SwingPaint implements ChangeListener{
 
-    JButton clearBtn, fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn, colorBtn, addTextBtn;
+    JButton clearBtn, fillRectBtn, fillOvalBtn, rectBtn, ovalBtn, lineDrawingBtn, pencilBtn, colorBtn, addTextBtn, colorOutlineBtn;
     Dimension buttonSpace = new Dimension(0, 10);
     static JFrame frame;
+    Color color;
     ActionListener actionListener = new ActionListener() {
 
         @Override
@@ -42,7 +43,14 @@ public class SwingPaint implements ChangeListener{
             } else if (e.getSource() == pencilBtn) {
                 DrawFrame.getInstance().setAction("Pencil");
             } else if (e.getSource() == colorBtn) {
-                DrawFrame.getInstance().setColor(JColorChooser.showDialog(DrawFrame.getInstance(), "Select a Color", black));
+                color = JColorChooser.showDialog(DrawFrame.getInstance(), "Select a Color", black);
+                DrawFrame.getInstance().setColor(color);
+                 colorBtn.setBackground(color);
+            }
+            else if(e.getSource() == colorOutlineBtn){
+                color = JColorChooser.showDialog(DrawFrame.getInstance(), "Select a Color", black);
+                DrawFrame.getInstance().setColorOutline(color);
+                 colorOutlineBtn.setBackground(color);
             }
             else if (e.getSource() ==  addTextBtn){
                 DrawFrame.getInstance().setAction("Add Text");
@@ -113,20 +121,9 @@ public class SwingPaint implements ChangeListener{
               String lineDrawingH = "Line Drawing: sets drawing action a line.\n";
               String pencilH = "Pencil: sets drawing action to draw wherever the mouse is dragged.\n";
               
-              
               Icon icon = new ImageIcon(getClass().getClassLoader().getResource("#SuperProfessional.gif"));
               JOptionPane.showMessageDialog(frame,  clearH + fillRectH + fillOvalH + rectH +ovalH + lineDrawingH + pencilH, "Help", JOptionPane.INFORMATION_MESSAGE, icon);
               
-              
-              /*JFrame helpFrame = new JFrame("Help");
-              Container content = helpFrame.getContentPane();
-              content.setLayout(new BorderLayout());
-
-              //content.add(DrawFrame.getInstance(), BorderLayout.CENTER);
-               helpFrame.setSize(1000, 1000);
-
-               helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-               helpFrame.setVisible(true);*/
           }
            });
       about.add(help);
@@ -145,10 +142,15 @@ public class SwingPaint implements ChangeListener{
         JPanel colors = new JPanel();
         JPanel funStuff = new JPanel();
 
-        colorBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("color-wheel.gif")));
+        colorBtn = new JButton();
         colorBtn.addActionListener(actionListener);
-        colorBtn.setContentAreaFilled(false);
+        colorBtn.setBackground(black);
         colorBtn.setBorderPainted(false);
+        
+        colorOutlineBtn = new JButton();
+        colorOutlineBtn.addActionListener(actionListener);
+        colorOutlineBtn.setBackground(black);
+        colorOutlineBtn.setBorderPainted(false);
 
         clearBtn = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Clear1.gif")));
         clearBtn.addActionListener(actionListener);
@@ -207,6 +209,8 @@ public class SwingPaint implements ChangeListener{
         controls.add(addTextBtn);
        
         colors.add(colorBtn);
+        colors.add(Box.createRigidArea(buttonSpace));
+        colors.add(colorOutlineBtn);
         
         JLabel sliderLabel = new JLabel("Stroke Size", JLabel.CENTER);
         sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
